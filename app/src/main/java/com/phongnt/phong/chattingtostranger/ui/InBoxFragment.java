@@ -1,0 +1,107 @@
+package com.phongnt.phong.chattingtostranger.ui;
+
+/**
+ * Created by phong on 9/17/2015.
+ */
+import android.app.AlertDialog;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+
+import com.phongnt.phong.chattingtostranger.R;
+import com.phongnt.phong.chattingtostranger.adapter.DialogAdapter;
+import com.phongnt.phong.chattingtostranger.services.ChatService;
+import com.quickblox.chat.model.QBDialog;
+import com.quickblox.core.QBEntityCallbackImpl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class InBoxFragment extends Fragment{
+    SwipeRefreshLayout swipeRefreshLayout;
+    ListView listViewDialog;
+    ProgressBar progressBar;
+    private  TabActivity tabActivity;
+
+    public InBoxFragment() {
+        // Required empty public constructor
+
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        tabActivity = (TabActivity) getActivity();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View rootView = inflater.inflate(R.layout.fragment_inbox, container, false);
+        listViewDialog = (ListView)rootView.findViewById(R.id.listViewDialogs);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+        if(tabActivity.isSessionActive()){
+            Log.e("session", "active");
+            getDialogs();
+        }
+        return rootView;
+    }
+
+    private void getDialogs(){
+        progressBar.setVisibility(View.VISIBLE);
+
+        // Get dialogs
+        //
+        ChatService.getInstance().getDialogs(new QBEntityCallbackImpl() {
+            @Override
+            public void onSuccess(Object object, Bundle bundle) {
+                progressBar.setVisibility(View.GONE);
+
+                final ArrayList<QBDialog> dialogs = (ArrayList<QBDialog>) object;
+
+                // build list view
+                //
+                buildListView(dialogs);
+            }
+
+            @Override
+            public void onError(List errors) {
+                progressBar.setVisibility(View.GONE);
+
+                AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+                dialog.setMessage("Get Dialogs Errors: " + errors).create().show();
+            }
+        });
+    }
+
+    void buildListView(List<QBDialog> dialogs){
+        final DialogAdapter adapter = new DialogAdapter(dialogs, getActivity());
+        listViewDialog.setAdapter(adapter);
+
+        // choose dialog
+        //
+        listViewDialog.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                QBDialog selectedDialog = (QBDialog) adapter.getItem(position);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(ChatActivity.EXTRA_DIALOG, selectedDialog);
+
+                // Open chat activity
+                ChatActivity.start(getActivity(), bundle);
+
+            }
+        });
+    }
+
+}

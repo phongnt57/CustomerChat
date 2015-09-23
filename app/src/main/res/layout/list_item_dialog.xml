@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal">
+
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+
+
+        android:layout_margin= "5dp"
+        android:id="@+id/roomImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:border_color="#ffffff"
+        app:border_width="2dp"
+        android:src="@drawable/user1"
+        android:scaleType="centerCrop" />
+    <View
+        android:id="@+id/status"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:background="@drawable/circle_dot_offline"
+        android:layout_alignParentRight="true"
+        android:layout_margin="5dp"
+        android:layout_centerVertical="true"
+
+        />
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:id="@+id/roomName"
+        android:layout_toRightOf="@+id/roomImage"
+        android:layout_width="wrap_content"
+        android:singleLine="true"
+        android:layout_height="wrap_content"
+        android:text="Phong Nt"
+        android:layout_gravity="center_vertical"
+        android:textSize="16sp"
+        android:textColor="@color/colorPrimary"/>
+
+    <TextView
+        android:id="@+id/lastMessage"
+        android:layout_below="@+id/roomName"
+        android:layout_toRightOf="@+id/roomImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:textSize="14sp"
+        android:textStyle="italic"
+        android:textColor="@color/textChat"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:textSize="12sp"
+        android:id="@+id/textViewGroupType"
+        android:layout_below="@+id/lastMessage"
+        android:layout_toRightOf="@+id/roomImage" />
+    <TextView
+        android:id="@+id/date"
+        android:textStyle="italic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="fefefe"
+        android:layout_alignBottom="@+id/roomName"
+        android:layout_alignParentRight="true"
+        android:textSize="12sp"
+        android:layout_margin="5dp"
+        android:textColor="@color/colorPrimary"
+        />
+
+
+</RelativeLayout>

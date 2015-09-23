@@ -1,0 +1,132 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:padding="5dp"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+
+   <RelativeLayout
+       android:background="@color/windowBackground"
+       android:layout_width="0dp"
+       android:layout_height="200dp"
+       android:layout_weight="0.5"
+       android:layout_margin="5dp">
+       <ImageButton
+           android:id="@+id/findRandom"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:src="@drawable/globe"
+           android:background="@android:color/transparent"
+           android:layout_centerHorizontal="true"
+           android:layout_centerVertical="true"/>
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_below="@+id/findRandom"
+           android:layout_centerHorizontal="true"
+           android:text="Find Random"
+           android:layout_margin="10dp"
+           android:textSize="16sp"
+           android:textStyle="bold"/>
+   </RelativeLayout>
+
+
+    <RelativeLayout
+        android:background="@color/windowBackground"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_weight="0.5"
+        android:layout_margin="5dp">
+        <ImageButton
+            android:id="@+id/findLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/location"
+            android:background="@android:color/transparent"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/findLocation"
+            android:layout_centerHorizontal="true"
+            android:text="Find by Location"
+            android:layout_margin="10dp"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+    </RelativeLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <RelativeLayout
+            android:background="@color/windowBackground"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_weight="0.5"
+            android:layout_margin="5dp">
+            <ImageButton
+                android:id="@+id/findGender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/girl"
+                android:background="@android:color/transparent"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/findGender"
+                android:layout_centerHorizontal="true"
+                android:text="Find by Gender"
+                android:layout_margin="10dp"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:background="@color/windowBackground"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_weight="0.5"
+            android:layout_margin="5dp">
+            <ImageButton
+                android:id="@+id/findGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/user3"
+                android:background="@android:color/transparent"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/findGroup"
+                android:layout_centerHorizontal="true"
+                android:text="Chat Group"
+                android:layout_margin="10dp"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+        </RelativeLayout>
+
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

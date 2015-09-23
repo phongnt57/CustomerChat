@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.phongnt.phong.chattingtostranger.ui.Login">
+    <item android:id="@+id/action_settings" android:title="@string/action_settings"
+        android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/add"
+    app:showAsAction="always"
+    android:icon="@drawable/abc_ab_share_pack_mtrl_alpha"
+    android:title="@string/action_settings"/>
+</menu>
