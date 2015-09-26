@@ -1,11 +1,17 @@
 package com.phongnt.phong.chattingtostranger.services;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.phongnt.phong.chattingtostranger.ui.Login;
+import com.phongnt.phong.chattingtostranger.ui.TabActivity;
 import com.quickblox.auth.QBAuth;
+import com.quickblox.auth.model.QBProvider;
 import com.quickblox.auth.model.QBSession;
+import com.quickblox.chat.QBChat;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.model.QBDialog;
 import com.quickblox.core.QBEntityCallback;
@@ -32,6 +38,8 @@ public class ChatService {
     private static final String TAG = ChatService.class.getSimpleName();
 
     static final int AUTO_PRESENCE_INTERVAL_IN_SECONDS = 30;
+    Context context;
+
 
     private static ChatService instance;
 
@@ -57,6 +65,7 @@ public class ChatService {
     private QBChatService chatService;
 
     private ChatService() {
+
         chatService = QBChatService.getInstance();
         chatService.addConnectionListener(chatConnectionListener);
     }
@@ -69,10 +78,12 @@ public class ChatService {
         chatService.removeConnectionListener(listener);
     }
 
+
     public void login(final QBUser user, final QBEntityCallback callback){
 
         // Create REST API session
         //
+
         QBAuth.createSession(user, new QBEntityCallbackImpl<QBSession>() {
             @Override
             public void onSuccess(QBSession session, Bundle args) {
@@ -102,6 +113,9 @@ public class ChatService {
         });
     }
 
+
+
+
     public void logout(){
         chatService.logout(new QBEntityCallbackImpl() {
             @Override
@@ -116,7 +130,7 @@ public class ChatService {
         });
     }
 
-    private void loginToChat(final QBUser user, final QBEntityCallback callback){
+    public void loginToChat(final QBUser user, final QBEntityCallback callback){
 
         chatService.login(user, new QBEntityCallbackImpl() {
             @Override

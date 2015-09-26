@@ -19,23 +19,37 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.phongnt.phong.chattingtostranger.R;
 import com.phongnt.phong.chattingtostranger.services.ChatService;
 import com.quickblox.auth.QBAuth;
 import com.quickblox.auth.model.QBProvider;
+import com.quickblox.auth.model.QBSession;
+import com.quickblox.chat.QBChatService;
+import com.quickblox.core.QBCallbackImpl;
+import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.QBEntityCallbackImpl;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.request.QBRequestBuilder;
+import com.quickblox.core.result.Result;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
+import com.quickblox.users.result.QBUserResult;
+
+import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import java.security.Provider;
 import java.util.List;
 
 public class Login extends Activity {
@@ -45,6 +59,7 @@ public class Login extends Activity {
     ProgressBar progressBar;
     private LoginButton loginButtonFb;
     private CallbackManager callbackManager;
+    private String EMAIL_NOT_FOUND = "Entity you are looking for was not found.";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +91,7 @@ public class Login extends Activity {
         buttonLogin = (Button) findViewById(R.id.login);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         loginButtonFb = (LoginButton) findViewById(R.id.login_button_fb);
+        loginButtonFb.setReadPermissions("email");
         //getKeyHash();
 
         progressBar.setVisibility(View.GONE);
@@ -135,12 +151,129 @@ public class Login extends Activity {
             }
         });
 
+
         loginButtonFb.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
-            public void onSuccess(LoginResult loginResult) {
+            public void onSuccess(final LoginResult loginResult) {
+
                 Log.e("result", "ok");
-                String facebookAccessToken = loginResult.getAccessToken().getToken();
-                Log.e("result token",facebookAccessToken);
+                final AccessToken facebookAccessToken = loginResult.getAccessToken();
+                Log.e("result token", facebookAccessToken.getToken());
+
+
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, final GraphResponse response) {
+                                final String email = object.optString("email");
+                                Log.e("email",email);
+                                Log.e("json",object.toString());
+                                final String uid = object.optString("id");
+                                QBAuth.createSession(new QBEntityCallbackImpl<QBSession>() {
+
+
+                                    @Override
+                                    public void onSuccess(QBSession result, Bundle params) {
+                                        super.onSuccess(result, params);
+                                        final String token = uid;
+                                        QBUsers.getUserByEmail(email, new QBEntityCallbackImpl<QBUser>() {
+                                            @Override
+                                            public void onError(List<String> errors) {
+                                                super.onError(errors);
+                                                Log.e("get email", errors.get(0));
+                                                if(errors.get(0).toString().equals(EMAIL_NOT_FOUND))
+                                                {
+                                                    //Log.e("session start", result.getToken());
+                                                    final QBUser qbUser = new QBUser();
+                                                    qbUser.setEmail(email);
+                                                    qbUser.setPassword(uid);
+
+                                                    QBUsers.signUp(qbUser, new QBEntityCallbackImpl<QBUser>() {
+                                                        @Override
+                                                        public void onSuccess(QBUser result, Bundle params) {
+                                                            Log.e("sign up ", "ok");
+                                                            super.onSuccess(result, params);
+                                                            ChatService.getInstance().login(qbUser, new QBEntityCallbackImpl() {
+
+
+                                                                @Override
+                                                                public void onSuccess() {
+                                                                    Intent intent = new Intent(Login.this, TabActivity.class);
+                                                                    startActivity(intent);
+                                                                    Log.e("login", "ok");
+                                                                    SharedPreferences pre = getSharedPreferences("user", MODE_PRIVATE);
+                                                                    SharedPreferences.Editor edit = pre.edit();
+                                                                    edit.putString("username", qbUser.getLogin() != null ? qbUser.getLogin() : qbUser.getEmail());
+                                                                    edit.putString("password", qbUser.getPassword());
+                                                                    edit.commit();
+
+                                                                    finish();
+
+
+                                                                }
+
+                                                                @Override
+                                                                public void onError(List list) {
+                                                                    Log.e("login", "no");
+                                                                    progressBar.setVisibility(View.GONE);
+                                                                    AlertDialog.Builder dialog = new AlertDialog.Builder(Login.this);
+                                                                    dialog.setMessage("Chat login errors: " + list.get(0).toString()).create().show();
+
+                                                                }
+                                                            });
+
+                                                        }
+
+                                                        @Override
+                                                        public void onError(List<String> errors) {
+                                                            super.onError(errors);
+                                                            Log.e("error sign up", errors.get(0));
+                                                        }
+                                                    });
+
+
+
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onSuccess(QBUser result, Bundle params) {
+                                                Log.e("get email","ok");
+                                                super.onSuccess(result, params);
+                                                if (result != null) {
+                                                    QBUser user = new QBUser();
+                                                    user.setEmail(result.getEmail());
+                                                    //Log.e("password",result.getPassword());
+                                                    user.setPassword(uid);
+                                                    loginAction(user);
+                                                } else
+                                                {
+
+
+
+                                                }
+                                            }
+                                        });
+
+
+                                    }
+                                });
+
+
+                            }
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "email");
+                request.setParameters(parameters);
+                request.executeAsync();
+
+
+
+
+
+
+
 
             }
 
@@ -158,6 +291,57 @@ public class Login extends Activity {
 
 
     }
+
+    public void loginAction(final QBUser user){
+        ChatService.getInstance().login(user, new QBEntityCallbackImpl() {
+
+
+            @Override
+            public void onSuccess() {
+                Intent intent = new Intent(Login.this, TabActivity.class);
+                startActivity(intent);
+                Log.e("login", "ok");
+                SharedPreferences pre = getSharedPreferences("user", MODE_PRIVATE);
+                SharedPreferences.Editor edit = pre.edit();
+                edit.putString("username", user.getLogin()!=null ? user.getLogin() : user.getEmail());
+                edit.putString("password", user.getPassword());
+                edit.commit();
+
+                finish();
+                      /*  progressBar.setVisibility(View.GONE);
+                        Intent intent = new Intent(Login.this, Dialog.class);
+                        startActivity(intent);
+                        finish();
+                        Log.e("login", "ok");
+                        SharedPreferences pre=getSharedPreferences("user", MODE_PRIVATE);
+                        SharedPreferences.Editor edit=pre.edit();
+                        edit.putString("username", username);
+                        edit.putString("password", password);
+                        edit.commit();*/
+
+
+            }
+
+            @Override
+            public void onError(List list) {
+                Log.e("login", "no");
+                progressBar.setVisibility(View.GONE);
+                AlertDialog.Builder dialog = new AlertDialog.Builder(Login.this);
+                dialog.setMessage("Chat login errors: " + list.get(0).toString()).create().show();
+
+            }
+        });
+
+    }
+
+
+
+    public static void registerUserBySocial(final String email) {
+
+
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
