@@ -22,7 +22,6 @@ repositories { mavenCentral() }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22.0.1'
     compile files('libs/quickblox-android-sdk-chat-2.2.6.jar')
     compile files('libs/quickblox-android-sdk-content-2.2.6.jar')
     compile files('libs/quickblox-android-sdk-core-2.2.6.jar')
@@ -32,9 +31,11 @@ dependencies {
     compile files('libs/quickblox-android-sdk-ratings-2.2.6.jar')
     compile files('libs/quickblox-android-sdk-videochat-2.2.6.jar')
     compile files('libs/quickblox-android-sdk-videochat-webrtc-2.2.6.jar')
+    compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.afollestad:material-dialogs:0.7.9.1'
-    compile 'com.android.support:design:22.2.1'
+    compile 'com.android.support:design:23.0.1'
     compile 'de.hdodenhof:circleimageview:1.3.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.facebook.android:facebook-android-sdk:4.0.0'
+    compile 'com.google.android.gms:play-services-maps:7.8.0'
 }

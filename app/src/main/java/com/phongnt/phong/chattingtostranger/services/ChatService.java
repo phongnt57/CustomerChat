@@ -157,50 +157,53 @@ public class ChatService {
     public void getDialogs(final QBEntityCallback callback){
         // get dialogs
         //
-        QBRequestGetBuilder customObjectRequestBuilder = new QBRequestGetBuilder();
-        customObjectRequestBuilder.setPagesLimit(100);
 
-        QBChatService.getChatDialogs(null, customObjectRequestBuilder, new QBEntityCallbackImpl<ArrayList<QBDialog>>() {
-            @Override
-            public void onSuccess(final ArrayList<QBDialog> dialogs, Bundle args) {
 
-                // collect all occupants ids
-                //
-                List<Integer> usersIDs = new ArrayList<Integer>();
-                for(QBDialog dialog : dialogs){
-                    usersIDs.addAll(dialog.getOccupants());
-                }
-
-                // Get all occupants info
-                //
-                QBPagedRequestBuilder requestBuilder = new QBPagedRequestBuilder();
-                requestBuilder.setPage(1);
-                requestBuilder.setPerPage(usersIDs.size());
-                //
-                QBUsers.getUsersByIDs(usersIDs, requestBuilder, new QBEntityCallbackImpl<ArrayList<QBUser>>() {
+                QBRequestGetBuilder customObjectRequestBuilder = new QBRequestGetBuilder();
+                customObjectRequestBuilder.setPagesLimit(100);
+                QBChatService.getChatDialogs(null, customObjectRequestBuilder, new QBEntityCallbackImpl<ArrayList<QBDialog>>() {
                     @Override
-                    public void onSuccess(ArrayList<QBUser> users, Bundle params) {
+                    public void onSuccess(final ArrayList<QBDialog> dialogs, Bundle args) {
 
-                        // Save users
+                        // collect all occupants ids
                         //
-                        setDialogsUsers(users);
+                        List<Integer> usersIDs = new ArrayList<Integer>();
+                        for (QBDialog dialog : dialogs) {
+                            usersIDs.addAll(dialog.getOccupants());
+                        }
 
-                        callback.onSuccess(dialogs, null);
+                        // Get all occupants info
+                        //
+                        QBPagedRequestBuilder requestBuilder = new QBPagedRequestBuilder();
+                        requestBuilder.setPage(1);
+                        requestBuilder.setPerPage(usersIDs.size());
+                        //
+                        QBUsers.getUsersByIDs(usersIDs, requestBuilder, new QBEntityCallbackImpl<ArrayList<QBUser>>() {
+                            @Override
+                            public void onSuccess(ArrayList<QBUser> users, Bundle params) {
+
+                                // Save users
+                                //
+                                setDialogsUsers(users);
+
+                                callback.onSuccess(dialogs, null);
+                            }
+
+                            @Override
+                            public void onError(List<String> errors) {
+                                callback.onError(errors);
+                            }
+
+                        });
                     }
 
                     @Override
                     public void onError(List<String> errors) {
                         callback.onError(errors);
                     }
-
                 });
-            }
 
-            @Override
-            public void onError(List<String> errors) {
-                callback.onError(errors);
-            }
-        });
+
     }
 
 

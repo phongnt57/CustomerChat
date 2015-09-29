@@ -160,6 +160,7 @@ public class ChatActivity extends BaseActivity  {
 
         try {
             chat.sendMessage(chatMessage);
+
         } catch (XMPPException e) {
             Log.e(TAG, "failed to send a message", e);
         } catch (SmackException sme) {

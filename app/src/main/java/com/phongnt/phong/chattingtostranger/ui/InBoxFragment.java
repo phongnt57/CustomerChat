@@ -4,6 +4,7 @@ package com.phongnt.phong.chattingtostranger.ui;
  * Created by phong on 9/17/2015.
  */
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,14 +16,20 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.phongnt.phong.chattingtostranger.R;
 import com.phongnt.phong.chattingtostranger.adapter.DialogAdapter;
+import com.phongnt.phong.chattingtostranger.data.DatabaseHandler;
 import com.phongnt.phong.chattingtostranger.services.ChatService;
+import com.quickblox.auth.QBAuth;
+import com.quickblox.auth.model.QBSession;
 import com.quickblox.chat.model.QBDialog;
 import com.quickblox.core.QBEntityCallbackImpl;
+import com.quickblox.users.model.QBUser;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 
 public class InBoxFragment extends Fragment{
@@ -30,6 +37,8 @@ public class InBoxFragment extends Fragment{
     ListView listViewDialog;
     ProgressBar progressBar;
     private  TabActivity tabActivity;
+    DatabaseHandler databaseHandler;
+    MaterialDialog dialog;
 
     public InBoxFragment() {
         // Required empty public constructor
@@ -49,7 +58,14 @@ public class InBoxFragment extends Fragment{
         View rootView = inflater.inflate(R.layout.fragment_inbox, container, false);
         listViewDialog = (ListView)rootView.findViewById(R.id.listViewDialogs);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-        if(tabActivity.isSessionActive()){
+        databaseHandler = new DatabaseHandler(getActivity());
+        dialog = new MaterialDialog.Builder(getActivity())
+                .title(null)
+                .content("Wating")
+                .progress(true, 0).build();
+        dialog.setCancelable(false);
+
+        if(tabActivity.isSessionActive()) {
             Log.e("session", "active");
             getDialogs();
         }
@@ -76,9 +92,12 @@ public class InBoxFragment extends Fragment{
             @Override
             public void onError(List errors) {
                 progressBar.setVisibility(View.GONE);
+                Log.e("error", "getdialog");
+                AlertDialog.Builder dialogs = new AlertDialog.Builder(getActivity());
+                dialogs.setMessage("Chat login errors: " + errors.get(0).toString()).create().show();
 
-                AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-                dialog.setMessage("Get Dialogs Errors: " + errors).create().show();
+
+
             }
         });
     }

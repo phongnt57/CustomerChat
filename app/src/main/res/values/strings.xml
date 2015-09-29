@@ -10,4 +10,8 @@
     <string name="title_activity_new_dialog">NewDialog</string>
     <string name="title_activity_tab">TabActivity</string>
     <string name="facebook_app_id">1629659717315016</string>
+    <string name="title_activity_sign_up">SignUp</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="google_map_prj_id">master-dreamer-108214</string>
+    <string name="title_activity_splash">Splash</string>
 </resources>

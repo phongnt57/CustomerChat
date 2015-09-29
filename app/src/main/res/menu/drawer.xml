@@ -4,22 +4,22 @@
     <group android:checkableBehavior="single">
 
         <item
-            android:id="@+id/inbox"
+            android:id="@+id/friend"
             android:checked="false"
-            android:icon="@drawable/ic_inbox_black"
-            android:title="@string/inbox_string" />
+            android:icon="@drawable/ic_action_group"
+            android:title="Friend" />
 
         <item
-            android:id="@+id/starred"
+            android:id="@+id/logout"
             android:checked="false"
-            android:icon="@drawable/ic_star_black"
-            android:title="@string/starred_string" />
+            android:icon="@drawable/ic_action_backspace"
+            android:title="Log out" />
 
         <item
-            android:id="@+id/sent_mail"
+            android:id="@+id/faq"
             android:checked="false"
-            android:icon="@drawable/ic_send_black"
-            android:title="@string/sent_mail_string" />
+            android:icon="@drawable/ic_action_read"
+            android:title="About us" />
 
 
 

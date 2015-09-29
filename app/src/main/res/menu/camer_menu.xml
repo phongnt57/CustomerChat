@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.phong.baitap2.AddContact">
+    <item android:id="@+id/take_photo" android:title="Take photo"
+        />
+
+    <item android:id="@+id/choose_gallery" android:title="Choose a photo"
+        />
+    <item android:id="@+id/share_cancel" android:title="Cancel"
+        />
+
+
+
+
+
+
+
+</menu>

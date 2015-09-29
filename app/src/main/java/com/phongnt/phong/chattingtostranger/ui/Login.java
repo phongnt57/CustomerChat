@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -29,6 +30,8 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.phongnt.phong.chattingtostranger.R;
+import com.phongnt.phong.chattingtostranger.data.DatabaseHandler;
+import com.phongnt.phong.chattingtostranger.data.User;
 import com.phongnt.phong.chattingtostranger.services.ChatService;
 import com.quickblox.auth.QBAuth;
 import com.quickblox.auth.model.QBProvider;
@@ -56,10 +59,12 @@ public class Login extends Activity {
     EditText editTextuser;
     EditText editTextpass;
     Button buttonLogin;
-    ProgressBar progressBar;
+    //ProgressBar progressBar;
     private LoginButton loginButtonFb;
     private CallbackManager callbackManager;
+    MaterialDialog dialog;
     private String EMAIL_NOT_FOUND = "Entity you are looking for was not found.";
+    DatabaseHandler databaseHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,56 +89,69 @@ public class Login extends Activity {
         }
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
+        databaseHandler = new DatabaseHandler(this);
 
         callbackManager = CallbackManager.Factory.create();
         editTextuser = (EditText) findViewById(R.id.username);
         editTextpass = (EditText) findViewById(R.id.password);
         buttonLogin = (Button) findViewById(R.id.login);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        //progressBar = (ProgressBar) findViewById(R.id.progressBar);
         loginButtonFb = (LoginButton) findViewById(R.id.login_button_fb);
         loginButtonFb.setReadPermissions("email");
+        Button signUp = (Button)findViewById(R.id.signUp);
+        signUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent in = new Intent(Login.this,SignUp.class);
+                startActivity(in);
+                finish();
+            }
+        });
         //getKeyHash();
 
-        progressBar.setVisibility(View.GONE);
+        //progressBar.setVisibility(View.GONE);
 
         //set up and login
         ChatService.initIfNeed(getApplicationContext());
+        if(databaseHandler.getLoginCount()>0)
+        {
+            Intent intent = new Intent(Login.this, TabActivity.class);
+            startActivity(intent);
+            finish();
+
+
+        }
+
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressBar.setVisibility(View.VISIBLE);
+                //progressBar.setVisibility(View.VISIBLE);
                 final QBUser user = new QBUser();
                 final String username = editTextuser.getText().toString();
                 final String password = editTextpass.getText().toString();
                 user.setLogin(username);
                 user.setPassword(password);
+                final MaterialDialog dialogs = new MaterialDialog.Builder(Login.this)
+                        .title(null)
+                        .content("Wating")
+                        .progress(true, 0)
+                        .show();
 
                 ChatService.getInstance().login(user, new QBEntityCallbackImpl() {
-
-
                     @Override
                     public void onSuccess() {
+
+                        Log.e("login", "ok");
+                        if(dialogs.isShowing())
+                        dialogs.dismiss();
+                        databaseHandler.addUser(username, password);
+
                         Intent intent = new Intent(Login.this, TabActivity.class);
                         startActivity(intent);
-                        Log.e("login", "ok");
-                        SharedPreferences pre = getSharedPreferences("user", MODE_PRIVATE);
-                        SharedPreferences.Editor edit = pre.edit();
-                        edit.putString("username", username);
-                        edit.putString("password", password);
-                        edit.commit();
+                        Log.e("login","success");
+                        finish();
 
-                        finish();
-                      /*  progressBar.setVisibility(View.GONE);
-                        Intent intent = new Intent(Login.this, Dialog.class);
-                        startActivity(intent);
-                        finish();
-                        Log.e("login", "ok");
-                        SharedPreferences pre=getSharedPreferences("user", MODE_PRIVATE);
-                        SharedPreferences.Editor edit=pre.edit();
-                        edit.putString("username", username);
-                        edit.putString("password", password);
-                        edit.commit();*/
 
 
                     }
@@ -141,7 +159,9 @@ public class Login extends Activity {
                     @Override
                     public void onError(List list) {
                         Log.e("login", "no");
-                        progressBar.setVisibility(View.GONE);
+                        if(dialogs.isShowing())
+                        dialogs.dismiss();
+                       // progressBar.setVisibility(View.GONE);
                         AlertDialog.Builder dialog = new AlertDialog.Builder(Login.this);
                         dialog.setMessage("Chat login errors: " + list.get(0).toString()).create().show();
 
@@ -155,6 +175,7 @@ public class Login extends Activity {
         loginButtonFb.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(final LoginResult loginResult) {
+
 
                 Log.e("result", "ok");
                 final AccessToken facebookAccessToken = loginResult.getAccessToken();
@@ -170,11 +191,17 @@ public class Login extends Activity {
                                 Log.e("email",email);
                                 Log.e("json",object.toString());
                                 final String uid = object.optString("id");
+                                dialog = new MaterialDialog.Builder(Login.this)
+                                        .title(null)
+                                        .content("Wating")
+                                        .progress(true, 0)
+                                        .show();
                                 QBAuth.createSession(new QBEntityCallbackImpl<QBSession>() {
 
 
                                     @Override
                                     public void onSuccess(QBSession result, Bundle params) {
+
                                         super.onSuccess(result, params);
                                         final String token = uid;
                                         QBUsers.getUserByEmail(email, new QBEntityCallbackImpl<QBUser>() {
@@ -201,12 +228,15 @@ public class Login extends Activity {
                                                                 public void onSuccess() {
                                                                     Intent intent = new Intent(Login.this, TabActivity.class);
                                                                     startActivity(intent);
+                                                                    finish();
                                                                     Log.e("login", "ok");
-                                                                    SharedPreferences pre = getSharedPreferences("user", MODE_PRIVATE);
+                                                                   /* SharedPreferences pre = getSharedPreferences("user", MODE_PRIVATE);
                                                                     SharedPreferences.Editor edit = pre.edit();
                                                                     edit.putString("username", qbUser.getLogin() != null ? qbUser.getLogin() : qbUser.getEmail());
                                                                     edit.putString("password", qbUser.getPassword());
-                                                                    edit.commit();
+                                                                    edit.commit();*/
+                                                                    databaseHandler.addUser(qbUser.getLogin() != null ? qbUser.getLogin() : qbUser.getEmail(),
+                                                                            qbUser.getPassword());
 
                                                                     finish();
 
@@ -216,7 +246,9 @@ public class Login extends Activity {
                                                                 @Override
                                                                 public void onError(List list) {
                                                                     Log.e("login", "no");
-                                                                    progressBar.setVisibility(View.GONE);
+                                                                    //progressBar.setVisibility(View.GONE);
+                                                                    if(dialog.isShowing())
+                                                                        dialog.dismiss();
                                                                     AlertDialog.Builder dialog = new AlertDialog.Builder(Login.this);
                                                                     dialog.setMessage("Chat login errors: " + list.get(0).toString()).create().show();
 
@@ -229,6 +261,8 @@ public class Login extends Activity {
                                                         public void onError(List<String> errors) {
                                                             super.onError(errors);
                                                             Log.e("error sign up", errors.get(0));
+                                                            if(dialog.isShowing())
+                                                                dialog.dismiss();
                                                         }
                                                     });
 
@@ -298,14 +332,18 @@ public class Login extends Activity {
 
             @Override
             public void onSuccess() {
+                if(dialog.isShowing())
+                    dialog.dismiss();
                 Intent intent = new Intent(Login.this, TabActivity.class);
                 startActivity(intent);
+                finish();
                 Log.e("login", "ok");
-                SharedPreferences pre = getSharedPreferences("user", MODE_PRIVATE);
+               /* SharedPreferences pre = getSharedPreferences("user", MODE_PRIVATE);
                 SharedPreferences.Editor edit = pre.edit();
                 edit.putString("username", user.getLogin()!=null ? user.getLogin() : user.getEmail());
                 edit.putString("password", user.getPassword());
-                edit.commit();
+                edit.commit();*/
+                databaseHandler.addUser(user.getLogin()!=null ? user.getLogin() : user.getEmail(),user.getPassword());
 
                 finish();
                       /*  progressBar.setVisibility(View.GONE);
@@ -325,7 +363,9 @@ public class Login extends Activity {
             @Override
             public void onError(List list) {
                 Log.e("login", "no");
-                progressBar.setVisibility(View.GONE);
+                if(dialog.isShowing())
+                    dialog.dismiss();
+                //progressBar.setVisibility(View.GONE);
                 AlertDialog.Builder dialog = new AlertDialog.Builder(Login.this);
                 dialog.setMessage("Chat login errors: " + list.get(0).toString()).create().show();
 
@@ -367,6 +407,7 @@ public class Login extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
+
     }
 
     private void getKeyHash() {

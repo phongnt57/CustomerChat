@@ -35,6 +35,7 @@ public class NewDialog extends BaseActivity implements QBEntityCallback<ArrayLis
     private int listViewIndex;
     private int listViewTop;
     private int currentPage = 0;
+    int size;
     private List<QBUser> users = new ArrayList<QBUser>();
 
     private ListView usersList;
@@ -131,13 +132,14 @@ public class NewDialog extends BaseActivity implements QBEntityCallback<ArrayLis
 
         // save users
         //
+        size = newUsers.size();
         if(newUsers.size()>0 )
         users.addAll(newUsers);
     // Prepare users list for simple adapter.
         //
         usersAdapter.notifyDataSetChanged();
         usersList.setAdapter(usersAdapter);
-        progressBar.setVisibility(View.GONE);
+        //progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -181,6 +183,7 @@ public class NewDialog extends BaseActivity implements QBEntityCallback<ArrayLis
         QBUsers.getUsers(pagedRequest, new QBEntityCallback<ArrayList<QBUser>>() {
             @Override
             public void onSuccess(ArrayList<QBUser> qbUsers, Bundle bundle) {
+                size = qbUsers.size();
                 for(int i =0;i<qbUsers.size();i++)
                 {
                     users.add(qbUsers.get(i));
@@ -204,6 +207,7 @@ public class NewDialog extends BaseActivity implements QBEntityCallback<ArrayLis
 
     private void loadNextPage() {
         ++currentPage;
+        if(size==PAGE_SIZE )
 
         QBUsers.getUsers(getQBPagedRequestBuilder(currentPage), this);
 

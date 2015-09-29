@@ -99,9 +99,16 @@ public class DialogAdapter extends BaseAdapter {
             Integer opponentID = ChatService.getInstance().getOpponentIDForPrivateDialog(dialog);
             QBUser user = ChatService.getInstance().getDialogsUsers().get(opponentID);
             if(user != null){
-                holder.name.setText(user.getLogin() == null ? user.getFullName() : user.getLogin());
+                holder.name.setText(user.getLogin() == null ? user.getEmail() : user.getLogin());
                 long currentTime = System.currentTimeMillis();
-                long userLastRequestAtTime = user.getLastRequestAt().getTime();
+                long userLastRequestAtTime;
+                if(user.getLastRequestAt()!=null){
+                    userLastRequestAtTime  = user.getLastRequestAt().getTime();
+                }else {
+                     userLastRequestAtTime = 0;
+
+                }
+
                 // if user didn't do anything last 5 minutes (5*60*1000 milliseconds)
                 if((currentTime - userLastRequestAtTime) > 5*60*1000){
                     // user is offline now

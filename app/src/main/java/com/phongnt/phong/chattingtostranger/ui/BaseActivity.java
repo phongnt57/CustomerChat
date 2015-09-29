@@ -9,6 +9,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.phongnt.phong.chattingtostranger.data.DatabaseHandler;
+import com.phongnt.phong.chattingtostranger.data.User;
 import com.phongnt.phong.chattingtostranger.services.ApplicationSessionStateCallback;
 
 import com.phongnt.phong.chattingtostranger.services.ChatService;
@@ -29,6 +31,7 @@ public class BaseActivity extends AppCompatActivity implements ApplicationSessio
 
     private boolean sessionActive = false;
     private boolean needToRecreateSession = false;
+    DatabaseHandler databaseHandler;
 
     private MaterialDialog progressDialog;
     private final Handler handler = new Handler();
@@ -40,9 +43,14 @@ public class BaseActivity extends AppCompatActivity implements ApplicationSessio
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences pre=getSharedPreferences ("user",MODE_PRIVATE);
+        databaseHandler = new DatabaseHandler(this);
+       /* SharedPreferences pre=getSharedPreferences ("user",MODE_PRIVATE);
         USER_LOGIN_KEY = pre.getString("username"," ");
-        USER_PASSWORD_KEY = pre.getString("password","");
+        USER_PASSWORD_KEY = pre.getString("password","");*/
+        User user = databaseHandler.getUser();
+        USER_LOGIN_KEY = user.getUser();
+        USER_PASSWORD_KEY = user.getPass();
+
 
 
 
@@ -66,10 +74,16 @@ public class BaseActivity extends AppCompatActivity implements ApplicationSessio
             Log.d(TAG, "Need to restore chat connection");
 
             QBUser user = new QBUser();
-            SharedPreferences pre=getSharedPreferences ("user",MODE_PRIVATE);
-            USER_LOGIN_KEY = pre.getString("username"," ");
-            USER_PASSWORD_KEY = pre.getString("password","");
-            user.setLogin(savedInstanceState.getString(USER_LOGIN_KEY));
+            User userinDb = databaseHandler.getUser();
+            //SharedPreferences pre=getSharedPreferences ("user",MODE_PRIVATE);
+            USER_LOGIN_KEY = userinDb.getUser();
+            USER_PASSWORD_KEY = userinDb.getPass();
+            if(USER_LOGIN_KEY.contains("@"))
+            {
+                user.setEmail(savedInstanceState.getString(USER_LOGIN_KEY));
+            }else {
+                user.setLogin(savedInstanceState.getString(USER_LOGIN_KEY));
+            }
             user.setPassword(savedInstanceState.getString(USER_PASSWORD_KEY));
 
             savedInstanceState.remove(USER_LOGIN_KEY);

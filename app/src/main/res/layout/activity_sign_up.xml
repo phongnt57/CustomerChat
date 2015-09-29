@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#eeeeee"
+    android:orientation="vertical">
+
+
+    />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+        <LinearLayout
+
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="#EEEEEE"
+            android:orientation="vertical"
+
+            >
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="10dp"
+                >
+
+                <ImageButton
+                    android:id="@+id/displayphoto"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/noname"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:scaleType="fitXY"/>
+                <TextView
+                    android:textColor="@color/textChat"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/displayphoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="Upload Picture"
+                    android:textSize="16sp"
+                    android:layout_gravity="center_horizontal"
+                    android:textStyle="bold"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="10dp"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_marginLeft="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+                <TextView
+                    android:textColor="@color/textChat"
+
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:text="Full name"
+                    android:textSize="16sp"
+
+                    android:textStyle="bold"/>
+                <EditText
+                    android:layout_toRightOf="@+id/username"
+                    android:id="@+id/username"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.7"
+                    android:layout_marginBottom="10dp"
+                    android:background="#ffffff"
+                    android:hint="Full name"
+                    android:inputType="textEmailAddress"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:textColor="#222222"
+                    android:textColorHint="#999999" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginLeft="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+                <TextView
+
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:text="Email"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/textChat"
+                    />
+                <EditText
+                    android:layout_toRightOf="@+id/textViewUsername"
+                    android:id="@+id/email"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.7"
+                    android:layout_marginBottom="10dp"
+                    android:background="#ffffff"
+                    android:hint="example@gmail.com"
+                    android:inputType="textEmailAddress"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:textColor="#222222"
+                    android:textColorHint="#999999" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginLeft="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+                <TextView
+                    android:textColor="@color/textChat"
+
+
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:text="Mobile"
+                    android:textSize="16sp"
+
+                    android:textStyle="bold"/>
+                <EditText
+
+                    android:id="@+id/mobile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.7"
+                    android:layout_marginBottom="10dp"
+                    android:background="#ffffff"
+                    android:hint="+841xxxx"
+                    android:inputType="textEmailAddress"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:textColor="#222222"
+                    android:textColorHint="#999999" />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_marginLeft="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+                <TextView
+                    android:textColor="@color/textChat"
+
+
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:text="DOB"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
+                <EditText
+
+
+                    android:id="@+id/dateOfBirth"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.7"
+                    android:layout_marginBottom="10dp"
+                    android:background="#ffffff"
+                    android:hint="05/06/2015"
+                    android:inputType="textEmailAddress"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:textColor="#222222"
+                    android:textColorHint="#999999" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginLeft="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+                <TextView
+                    android:textColor="@color/textChat"
+
+
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:text="Password"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
+                <EditText
+
+
+                    android:id="@+id/password"
+                    android:password="true"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.7"
+                    android:layout_marginBottom="10dp"
+                    android:background="#ffffff"
+                    android:hint="Type your pass"
+                    android:inputType="textEmailAddress"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:textColor="#222222"
+                    android:textColorHint="#999999" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginLeft="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+                <TextView
+                    android:textColor="@color/textChat"
+
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
+                <Button
+                    android:layout_weight="0.7"
+                    android:id="@+id/submitInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dip"
+                    android:background="#ffffff"
+                    android:text="Submit"
+                    android:textColor="#26ae90" />
+
+                <!-- Link to Login Screen -->
+            </LinearLayout>
+
+
+
+
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
