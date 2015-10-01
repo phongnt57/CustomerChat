@@ -24,6 +24,7 @@ public class UserAdapter extends BaseAdapter {
     private List<QBUser> dataSource;
     private LayoutInflater inflater;
     private List<QBUser> selected = new ArrayList<QBUser>();
+    int count =0;
 
     public UserAdapter(List<QBUser> dataSource, Context ctx) {
         this.dataSource = dataSource;
@@ -63,11 +64,13 @@ public class UserAdapter extends BaseAdapter {
         }
         final QBUser user = dataSource.get(position);
         if (user != null) {
-            holder.login.setText(user.getLogin());
+            if(user.getLogin()==null) holder.login.setText(user.getEmail());
+            else   holder.login.setText(user.getLogin());
             holder.add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if ((((CheckBox) v).isChecked())) {
+
                         selected.add(user);
                     } else {
                         selected.remove(user);

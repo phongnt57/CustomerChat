@@ -6,6 +6,7 @@ import android.os.Handler;
 
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.BaseAdapter;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -116,7 +117,7 @@ public class BaseActivity extends AppCompatActivity implements ApplicationSessio
             @Override
             public void onError(List errors) {
 
-                Log.d(TAG, "Chat login onError: " + errors);
+                Log.d(TAG, "Chat login onError BAse: " + errors);
 
                 Toast toast = Toast.makeText(getApplicationContext(),
                         "Error in the recreate session request, trying again in 3 seconds.. Check you internet connection.", Toast.LENGTH_SHORT);
@@ -147,19 +148,17 @@ public class BaseActivity extends AppCompatActivity implements ApplicationSessio
         super.onSaveInstanceState(outState);
     }
 
-    private void showProgressDialog(){
-        if(progressDialog == null) {
+    private void showProgressDialog() {
+        if (progressDialog == null) {
 
-            progressDialog = new MaterialDialog.Builder(this)
-                    .title("")
-                    .content("Waiting")
+            progressDialog = new MaterialDialog.Builder(BaseActivity.this)
+                    .title(null)
+                    .content("Wating")
                     .progress(true, 0)
-                    .progressIndeterminateStyle(true).build();
+                    .show();
+
 
         }
-        progressDialog.show();
-
-
     }
 
 

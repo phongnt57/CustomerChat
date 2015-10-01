@@ -21,6 +21,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -154,24 +155,28 @@ public class MapFragment extends Fragment
 
         QBLocationRequestBuilder getLocationsBuilder = new QBLocationRequestBuilder();
         getLocationsBuilder.setPerPage(100);
-        //getLocationsBuilder.setLastOnly();
+        getLocationsBuilder.setLastOnly();
         //getLocationsBuilder.setHasStatus();
         getLocationsBuilder.setSort(SortField.CREATED_AT);
         QBLocations.getLocations(getLocationsBuilder, new QBEntityCallbackImpl<ArrayList<QBLocation>>() {
             @Override
             public void onSuccess(ArrayList<QBLocation> locations, Bundle params) {
                 Log.e("found", String.valueOf(locations.size()));
+                Toast.makeText(getActivity(),"Found "+ locations.size() +" people on map",Toast.LENGTH_SHORT).show();
 
                 for (int i = 0; i < locations.size(); i++) {
                     QBLocation friendLocation = locations.get(i);
                     QBUser friendUser = friendLocation.getUser();
-                    ;
+
                     if (friendUser.getEmail() == null) name = friendUser.getLogin();
                     else name = friendUser.getEmail();
                     LatLng latLng = new LatLng(friendLocation.getLatitude(), friendLocation.getLongitude());
 
 
-                    Marker marker = map.addMarker(new MarkerOptions().position(latLng).title(name + "is here"));
+                    Marker marker = map.addMarker(new MarkerOptions().position(latLng).title(name + " is here"));
+                    if(i==locations.size() - 1 ) {
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 4));
+                    }
                     markerMapInfo.put(marker.getId(), friendUser);
 
                 }

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.quickblox.chat.model.QBDialog;
 import com.quickblox.chat.model.QBDialogType;
 import com.quickblox.core.QBEntityCallbackImpl;
 import com.quickblox.core.request.QBRequestGetBuilder;
+import com.quickblox.users.model.QBUser;
 
 
 import org.jivesoftware.smack.ConnectionListener;
@@ -50,7 +52,9 @@ public class ChatActivity extends BaseActivity  {
     private EditText messageEditText;
     private ListView messagesContainer;
     private Button sendButton;
-    private ProgressBar progressBar;
+    //
+     private ProgressBar progressBar;
+    Toolbar toolbar;
 
 
     private Chat chat;
@@ -98,7 +102,7 @@ public class ChatActivity extends BaseActivity  {
 
             super.onBackPressed();
 
-            Intent i = new Intent(ChatActivity.this, Dialog.class);
+            Intent i = new Intent(ChatActivity.this, TabActivity.class);
             startActivity(i);
             finish();
 
@@ -108,6 +112,9 @@ public class ChatActivity extends BaseActivity  {
         messagesContainer = (ListView) findViewById(R.id.list_view_messages);
         messageEditText = (EditText) findViewById(R.id.inputMsg);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         //TextView companionLabel = (TextView) findViewById(R.id.companionLabel);
 
@@ -122,9 +129,11 @@ public class ChatActivity extends BaseActivity  {
             //container.removeView(companionLabel);
         } else if (dialog.getType() == QBDialogType.PRIVATE) {
             Integer opponentID = ChatService.getInstance().getOpponentIDForPrivateDialog(dialog);
-            //companionLabel.setText(ChatService.getInstance().getDialogsUsers().get(opponentID).getLogin());
+            String title = ChatService.getInstance().getDialogsUsers().get(opponentID).getLogin();
+            setTitle(title==null ? ChatService.getInstance().getDialogsUsers().get(opponentID).getEmail() : title);
             myID = ChatService.getInstance().getDialogsUsers().get(opponentID).getId();
             adapter = new ChatAdapter(ChatActivity.this, new ArrayList<QBChatMessage>(), myID);
+            messagesContainer.setAdapter(adapter);
             Log.e("myID",String.valueOf(myID));
         }
 
@@ -191,7 +200,7 @@ public class ChatActivity extends BaseActivity  {
 
             // Join group chat
             //
-            progressBar.setVisibility(View.VISIBLE);
+           // progressBar.setVisibility(View.VISIBLE);
             //
             joinGroupChat();
 
@@ -243,7 +252,7 @@ public class ChatActivity extends BaseActivity  {
                     }
                 }
 
-                progressBar.setVisibility(View.GONE);
+               // progressBar.setVisibility(View.GONE);
             }
 
             @Override
@@ -270,10 +279,12 @@ public class ChatActivity extends BaseActivity  {
 
     public void showMessageInLast(QBChatMessage message) {
         adapter.addtoLast(message);
+        Log.e("show in last","count "+adapter.getCount());
 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
                 adapter.notifyDataSetChanged();
                 scrollDown();
             }

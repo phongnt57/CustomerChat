@@ -96,6 +96,7 @@ public class DialogAdapter extends BaseAdapter {
         }else{
             // get opponent name for private dialog
             //
+            //ChatService.getInstance().getOpponentIDForPrivateDialog(dialog)!=null
             Integer opponentID = ChatService.getInstance().getOpponentIDForPrivateDialog(dialog);
             QBUser user = ChatService.getInstance().getDialogsUsers().get(opponentID);
             if(user != null){

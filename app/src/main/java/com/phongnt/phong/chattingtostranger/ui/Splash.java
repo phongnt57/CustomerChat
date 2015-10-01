@@ -8,12 +8,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.phongnt.phong.chattingtostranger.R;
 import com.phongnt.phong.chattingtostranger.data.DatabaseHandler;
 import com.phongnt.phong.chattingtostranger.data.User;
 import com.phongnt.phong.chattingtostranger.services.ChatService;
+import com.quickblox.auth.QBAuth;
+import com.quickblox.auth.model.QBSession;
 import com.quickblox.core.QBEntityCallbackImpl;
 import com.quickblox.users.model.QBUser;
 
@@ -21,11 +25,14 @@ import java.util.List;
 
 public class Splash extends AppCompatActivity {
     DatabaseHandler databaseHandler;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+
 
         databaseHandler = new DatabaseHandler(this);
 
@@ -33,61 +40,41 @@ public class Splash extends AppCompatActivity {
             ChatService.initIfNeed(getApplicationContext());
             if(databaseHandler.getLoginCount()>0)
             {
+                progressBar.setVisibility(View.VISIBLE);
                 User user = databaseHandler.getUser();
                 QBUser qbUser= new QBUser();
                 if(user.getUser().contains("@")) qbUser.setEmail(user.getUser());
                 else  qbUser.setLogin(user.getUser());
                 qbUser.setPassword(user.getPass());
 
-                ChatService.getInstance().login(qbUser, new QBEntityCallbackImpl() {
+                QBAuth.createSession(qbUser, new QBEntityCallbackImpl<QBSession>() {
                     @Override
-                    public void onSuccess() {
-
-                        Log.e("login", "ok");
-
-                      Intent intent = new Intent(Splash.this, TabActivity.class);
-                        startActivity(intent);
-
+                    public void onSuccess(QBSession result, Bundle params) {
+                        super.onSuccess(result, params);
+                        
+                        progressBar.setVisibility(View.GONE);
+                        Intent in = new Intent(Splash.this,TabActivity.class);
+                        startActivity(in);
                         finish();
-
-
                     }
 
                     @Override
-                    public void onError(List list) {
-                        Toast.makeText(getApplicationContext(),"Some error, login again",Toast.LENGTH_SHORT).show();
-                        Log.e("login", "no");
-                        Intent in = new Intent(Splash.this,Login.class);
-                        startActivity(in);
-                        finish();
-
+                    public void onError(List<String> errors) {
+                        progressBar.setVisibility(View.GONE);
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(Splash.this);
+                        dialog.setMessage("chat login errors: " + errors.get(0)).create().show();
+                        Log.e("token ", "no");
+                        super.onError(errors);
                     }
                 });
 
 
-
             }
             else {
-                Log.e("wait 2 s","oj");
-
-                new Handler().postDelayed(new Runnable() {
-
-            /*
-             * Showing splash screen with a timer. This will be useful when you
-             * want to show case your app logo / company
-             */
-
-                    @Override
-                    public void run() {
-                        // This method will be executed once the timer is over
-                        // Start your app main activity
-                        Intent i = new Intent(Splash.this, Login.class);
-                        startActivity(i);
-
-
-                        finish();
-                    }
-                }, 2000);
+                Log.e("wait 2 s", "oj");
+                Intent in = new Intent(Splash.this,Login.class);
+                startActivity(in);
+                finish();
 
 
 

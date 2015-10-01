@@ -7,7 +7,7 @@
             android:id="@+id/friend"
             android:checked="false"
             android:icon="@drawable/ic_action_group"
-            android:title="Friend" />
+            android:title=" Find Friend" />
 
         <item
             android:id="@+id/logout"

@@ -33,7 +33,7 @@ import java.util.List;
 
 
 public class InBoxFragment extends Fragment{
-    SwipeRefreshLayout swipeRefreshLayout;
+   SwipeRefreshLayout swipeRefreshLayout;
     ListView listViewDialog;
     ProgressBar progressBar;
     private  TabActivity tabActivity;
@@ -59,15 +59,25 @@ public class InBoxFragment extends Fragment{
         listViewDialog = (ListView)rootView.findViewById(R.id.listViewDialogs);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         databaseHandler = new DatabaseHandler(getActivity());
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_layout);
         dialog = new MaterialDialog.Builder(getActivity())
                 .title(null)
                 .content("Wating")
                 .progress(true, 0).build();
         dialog.setCancelable(false);
+        ChatService.initIfNeed(getActivity());
 
         if(tabActivity.isSessionActive()) {
             Log.e("session", "active");
             getDialogs();
+
+            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    getDialogs();
+
+                }
+            });
         }
         return rootView;
     }
@@ -83,6 +93,37 @@ public class InBoxFragment extends Fragment{
                 progressBar.setVisibility(View.GONE);
 
                 final ArrayList<QBDialog> dialogs = (ArrayList<QBDialog>) object;
+
+                // build list view
+                //
+                buildListView(dialogs);
+            }
+
+            @Override
+            public void onError(List errors) {
+                progressBar.setVisibility(View.GONE);
+                Log.e("error", "getdialog");
+                AlertDialog.Builder dialogs = new AlertDialog.Builder(getActivity());
+                dialogs.setMessage("Chat login errors: " + errors.get(0).toString()).create().show();
+
+
+
+            }
+        });
+    }
+
+    private void getRefreshDialogs(){
+
+
+        // Get dialogs
+        //
+        ChatService.getInstance().getDialogs(new QBEntityCallbackImpl() {
+            @Override
+            public void onSuccess(Object object, Bundle bundle) {
+                progressBar.setVisibility(View.GONE);
+
+                final ArrayList<QBDialog> dialogs = (ArrayList<QBDialog>) object;
+                swipeRefreshLayout.setRefreshing(false);
 
                 // build list view
                 //

@@ -1,11 +1,28 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.phongnt.phong.chattingtostranger.ui.NewDialog">
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:titleTextColor="@color/textColorPrimary"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:theme="@style/ToolBarStyle"
+        android:title="Find Friend"
+
+        />
 
 
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_below="@+id/toolbar"
     android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -19,16 +36,23 @@
     <!-- place your view here -->
 
 </android.support.v4.widget.SwipeRefreshLayout>
-    <ImageButton
-        android:layout_margin="10dp"
-        android:layout_alignParentRight="true"
-        android:background="@android:color/transparent"
-        android:id="@+id/createChatButton"
-        android:layout_alignParentBottom="true"
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/createChatButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="16dp"
+            android:src="@drawable/syringe"
+            app:layout_anchor="@id/listViewUser"
+            app:layout_anchorGravity="bottom|right|end" />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_centerInParent="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/syringe"
-        />
+        android:layout_height="wrap_content" />
 
 
 </RelativeLayout>
+    </android.support.design.widget.CoordinatorLayout>

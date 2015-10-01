@@ -118,6 +118,9 @@ public class TabActivity extends BaseActivity {
                         android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                         fragmentTransaction.replace(R.id.frame,fragment);
                         fragmentTransaction.commit();*/
+                        Intent ins = new Intent(TabActivity.this,NewDialog.class);
+                        startActivity(ins);
+                        finish();
                         return true;
 
                     // For rest of the options we just show a toast on click
@@ -125,7 +128,6 @@ public class TabActivity extends BaseActivity {
                     case R.id.logout:
                         //Toast.makeText(getApplicationContext(),"Stared Selected",Toast.LENGTH_SHORT).show();
                         ChatService.getInstance().logout();
-
                         databaseHandler.resetLogin();
                         Intent in = new Intent(TabActivity.this,Login.class);
                         startActivity(in);

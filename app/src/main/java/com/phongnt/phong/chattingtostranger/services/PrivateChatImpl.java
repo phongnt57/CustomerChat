@@ -62,7 +62,7 @@ public class PrivateChatImpl extends QBMessageListenerImpl<QBPrivateChat> implem
     @Override
     public void processMessage(QBPrivateChat chat, QBChatMessage message) {
         Log.w(TAG, "new incoming message: " + message);
-        chatActivity.showMessage(message);
+        chatActivity.showMessageInLast(message);
     }
 
     @Override

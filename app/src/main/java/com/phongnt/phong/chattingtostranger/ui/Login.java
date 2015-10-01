@@ -158,9 +158,10 @@ public class Login extends Activity {
 
                     @Override
                     public void onError(List list) {
-                        Log.e("login", "no");
+                        Log.e("login", list.get(0).toString());
                         if(dialogs.isShowing())
                         dialogs.dismiss();
+
                        // progressBar.setVisibility(View.GONE);
                         AlertDialog.Builder dialog = new AlertDialog.Builder(Login.this);
                         dialog.setMessage("Chat login errors: " + list.get(0).toString()).create().show();

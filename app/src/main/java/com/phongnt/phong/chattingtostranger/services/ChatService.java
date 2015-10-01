@@ -89,6 +89,7 @@ public class ChatService {
             public void onSuccess(QBSession session, Bundle args) {
 
                 user.setId(session.getUserId());
+                Log.e("login 1, er", "er");
 
                 // login to Chat
                 //
@@ -150,6 +151,7 @@ public class ChatService {
             @Override
             public void onError(List errors) {
                 callback.onError(errors);
+                Log.e("login, er","er");
             }
         });
     }
@@ -233,6 +235,10 @@ public class ChatService {
 
     public Integer getOpponentIDForPrivateDialog(QBDialog dialog){
         Integer opponentID = -1;
+        QBUser user = getCurrentUser();
+        int myid = getCurrentUser().getId();
+        Log.e("id t",myid+"");
+        Log.e("cu",getCurrentUser().getLogin()+"");
         for(Integer userID : dialog.getOccupants()){
             if(!userID.equals(getCurrentUser().getId())){
                 opponentID = userID;
