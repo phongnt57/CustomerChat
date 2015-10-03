@@ -74,7 +74,7 @@ public class InBoxFragment extends Fragment{
             swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-                    getDialogs();
+                    getRefreshDialogs();
 
                 }
             });
@@ -105,6 +105,9 @@ public class InBoxFragment extends Fragment{
                 Log.e("error", "getdialog");
                 AlertDialog.Builder dialogs = new AlertDialog.Builder(getActivity());
                 dialogs.setMessage("Chat login errors: " + errors.get(0).toString()).create().show();
+                Intent init = new Intent(getActivity(),Splash.class);
+                startActivity(init);
+                getActivity().finish();
 
 
 
@@ -159,6 +162,7 @@ public class InBoxFragment extends Fragment{
 
                 // Open chat activity
                 ChatActivity.start(getActivity(), bundle);
+                getActivity().finish();
 
             }
         });

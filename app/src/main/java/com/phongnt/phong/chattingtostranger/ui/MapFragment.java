@@ -168,8 +168,8 @@ public class MapFragment extends Fragment
                     QBLocation friendLocation = locations.get(i);
                     QBUser friendUser = friendLocation.getUser();
 
-                    if (friendUser.getEmail() == null) name = friendUser.getLogin();
-                    else name = friendUser.getEmail();
+                    if (friendUser.getLogin() == null) name = friendUser.getEmail();
+                    else name = friendUser.getLogin();
                     LatLng latLng = new LatLng(friendLocation.getLatitude(), friendLocation.getLongitude());
 
 
@@ -282,6 +282,7 @@ public class MapFragment extends Fragment
         bundle.putSerializable(ChatActivity.EXTRA_DIALOG, dialog);
 
         ChatActivity.start(getActivity(), bundle);
+        getActivity().finish();
     }
 
 

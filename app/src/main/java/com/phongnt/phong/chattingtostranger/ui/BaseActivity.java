@@ -1,5 +1,6 @@
 package com.phongnt.phong.chattingtostranger.ui;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -106,6 +107,9 @@ public class BaseActivity extends AppCompatActivity implements ApplicationSessio
             @Override
             public void onSuccess() {
                 Log.d(TAG, "Chat login onSuccess");
+                Intent in = new Intent();
+                startActivity(in);
+                finish();
 
                 progressDialog.dismiss();
                 progressDialog = null;
@@ -140,7 +144,9 @@ public class BaseActivity extends AppCompatActivity implements ApplicationSessio
     protected void onSaveInstanceState(Bundle outState) {
         QBUser currentUser = ChatService.getInstance().getCurrentUser();
         if(currentUser != null) {
+            if(currentUser.getLogin()!=null)
             outState.putString(USER_LOGIN_KEY, currentUser.getLogin());
+            else outState.putString(USER_LOGIN_KEY,currentUser.getEmail());
             outState.putString(USER_PASSWORD_KEY, currentUser.getPassword());
         }
 

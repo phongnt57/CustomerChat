@@ -42,7 +42,7 @@ public class Splash extends AppCompatActivity {
             {
                 progressBar.setVisibility(View.VISIBLE);
                 User user = databaseHandler.getUser();
-                QBUser qbUser= new QBUser();
+                final QBUser qbUser= new QBUser();
                 if(user.getUser().contains("@")) qbUser.setEmail(user.getUser());
                 else  qbUser.setLogin(user.getUser());
                 qbUser.setPassword(user.getPass());
@@ -51,18 +51,41 @@ public class Splash extends AppCompatActivity {
                     @Override
                     public void onSuccess(QBSession result, Bundle params) {
                         super.onSuccess(result, params);
-                        
-                        progressBar.setVisibility(View.GONE);
-                        Intent in = new Intent(Splash.this,TabActivity.class);
-                        startActivity(in);
-                        finish();
+                        qbUser.setId(result.getUserId());
+                        if(ChatService.getInstance().getCurrentUser()==null){
+                            Log.e("user","null");
+                            ChatService.getInstance().loginToChat(qbUser,new QBEntityCallbackImpl(){
+                                @Override
+                                public void onSuccess() {
+                                    super.onSuccess();
+                                    Intent in = new Intent(Splash.this, TabActivity.class);
+                                    startActivity(in);
+                                    finish();
+
+                                }
+
+                                @Override
+                                public void onError(List errors) {
+                                    super.onError(errors);
+                                    AlertDialog.Builder dialog = new AlertDialog.Builder(Splash.this);
+                                    dialog.setMessage("chat login errors: " + errors.get(0)).create().show();
+
+                                }
+                            });
+                        }
+                        else {
+                            progressBar.setVisibility(View.GONE);
+                            Intent in = new Intent(Splash.this, TabActivity.class);
+                            startActivity(in);
+                            finish();
+                        }
                     }
 
                     @Override
                     public void onError(List<String> errors) {
                         progressBar.setVisibility(View.GONE);
                         AlertDialog.Builder dialog = new AlertDialog.Builder(Splash.this);
-                        dialog.setMessage("chat login errors: " + errors.get(0)).create().show();
+                        dialog.setMessage("session login errors: " + errors.get(0)).create().show();
                         Log.e("token ", "no");
                         super.onError(errors);
                     }

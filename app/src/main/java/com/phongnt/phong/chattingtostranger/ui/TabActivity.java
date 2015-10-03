@@ -130,6 +130,7 @@ public class TabActivity extends BaseActivity {
                         ChatService.getInstance().logout();
                         databaseHandler.resetLogin();
                         Intent in = new Intent(TabActivity.this,Login.class);
+                        in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(in);
                         finish();
                         return true;
